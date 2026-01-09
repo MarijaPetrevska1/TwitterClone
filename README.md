@@ -26,11 +26,14 @@ Uses JWT stored in localStorage for authenticated requests
 Simple SPA-style navigation using page redirects
 
 🛠 Technologies Used
+
 Backend: ASP.NET Core Web API, Entity Framework Core, JWT Authentication, Swagger / OpenAPI, Dependency Injection, MSSQL (or configured database)
+
 Frontend: HTML5, CSS3, Vanilla JavaScript (ES Modules), Fetch API, LocalStorage for token management
 
 ▶ How to Run the Project Locally
-Backend
+
+*Backend*
 
 Open the backend solution in Visual Studio
 
@@ -40,7 +43,7 @@ Run the project
 
 Swagger will be available at: https://localhost:7211/swagger
 
-Frontend
+*Frontend*
 
 Open the twitter-frontend folder in Visual Studio Code
 
