@@ -7,29 +7,32 @@ This project is a simplified Twitter clone built as part of the Product Engineer
 The goal of the assignment was to design and implement a functional product-like solution, focusing on architecture, logic, code structure, and problem-solving, rather than just visual polish.
 The application supports core social media functionalities such as authentication, posting content, interacting with posts, and viewing a feed, implemented with a clear separation between backend and frontend.
 
-🏗 Architecture Overview
+---
 
-The project is split into two clearly separated parts:
+## 🏗 Architecture Overview
 
-🔹 Backend (ASP.NET Core Web API)
+### 🔹 Backend (ASP.NET Core Web API)
+- RESTful API handling authentication, posts, likes, retweets, and profiles
+- Stateless JWT authentication
+- Services & repositories to maintain clean separation of concerns
+- Data persistence with Entity Framework Core and MSSQL
+- Swagger / OpenAPI documentation
 
-Exposes a RESTful API
-Handles authentication, business logic, and data persistence
-Stateless authentication using JWT
-Designed with services and repositories to ensure clean separation of concerns
+### 🔹 Frontend (HTML, CSS, JavaScript)
+- Client-side web application
+- Communicates with backend via HTTP API (`fetch`)
+- JWT stored in `localStorage` for authentication
+- SPA-like navigation using page redirects
 
-🔹 Frontend (HTML, CSS, JavaScript)
+---
 
-Pure client-side web application
-Communicates with backend exclusively via HTTP API calls (fetch)
-Uses JWT stored in localStorage for authenticated requests
-Simple SPA-style navigation using page redirects
+## 🛠 Technologies Used
 
-🛠 Technologies Used
+**Backend:** ASP.NET Core Web API, Entity Framework Core, JWT Authentication, Swagger / OpenAPI, Dependency Injection, MSSQL  
 
-Backend: ASP.NET Core Web API, Entity Framework Core, JWT Authentication, Swagger / OpenAPI, Dependency Injection, MSSQL (or configured database)
+**Frontend:** HTML5, CSS3, Vanilla JavaScript (ES6 Modules), Fetch API, LocalStorage
 
-Frontend: HTML5, CSS3, Vanilla JavaScript (ES Modules), Fetch API, LocalStorage for token management
+---
 
 ▶ How to Run the Project Locally
 
@@ -53,40 +56,25 @@ Start Live Server and open:
 
 http://127.0.0.1:5500/login.html
 
-## 📁 Project Structure
+---
 
-### Backend
-TwitterClone/
-│
-├── Controllers/
-├── Services/
-├── DataAccess/
-│   ├── Repositories/
-│   └── DbContext
-├── Helpers/
-├── Models/
-├── Program.cs
-└── appsettings.json
+## ✅ Features Implemented
+
+**Core Features (Mandatory)**
+- User registration & login
+- Create posts (tweets)
+- Feed displaying posts
+- Like & retweet functionality
+- User profile page
+
+**Additional Features (Bonus)**
+- Display own and other users’ posts
+- Protected routes using client-side guards
+- Modular JS code for maintainability
+
+---
 
 
-shell
-Copy code
-
-### Frontend
-twitter-frontend/
-│
-├── login.html
-├── register.html
-├── home.html
-│
-├── css/
-│   └── style.css
-│
-├── js/
-│   ├── api.js
-│   ├── auth.js
-│   ├── feed.js
-│   └── guard.js
 
 
 
