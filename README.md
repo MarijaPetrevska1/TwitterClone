@@ -30,3 +30,22 @@ Backend: ASP.NET Core Web API, Entity Framework Core, JWT Authentication, Swagge
 Frontend: HTML5, CSS3, Vanilla JavaScript (ES Modules), Fetch API, LocalStorage for token management
 
 ▶ How to Run the Project Locally
+Backend
+
+Open the backend solution in Visual Studio
+
+Update the database connection string in appsettings.json if needed
+
+Run the project
+
+Swagger will be available at: https://localhost:7211/swagger
+
+Frontend
+
+Open the twitter-frontend folder in Visual Studio Code
+
+Install and use Live Server
+
+Start Live Server and open:
+
+http://127.0.0.1:5500/login.html
