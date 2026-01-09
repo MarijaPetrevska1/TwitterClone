@@ -52,3 +52,36 @@ Install and use Live Server
 Start Live Server and open:
 
 http://127.0.0.1:5500/login.html
+
+## 📁 Project Structure
+
+### Backend
+TwitterClone/
+├── Controllers/
+├── Services/
+├── DataAccess/
+│ ├── Repositories/
+│ └── DbContext
+├── Helpers/
+├── Models/
+├── Program.cs
+└── appsettings.json
+
+shell
+Copy code
+
+### Frontend
+twitter-frontend/
+├── login.html
+├── register.html
+├── home.html
+├── css/
+│ └── style.css
+├── js/
+│ ├── api.js
+│ ├── auth.js
+│ ├── feed.js
+│ └── guard.js
+
+Copy code
+
