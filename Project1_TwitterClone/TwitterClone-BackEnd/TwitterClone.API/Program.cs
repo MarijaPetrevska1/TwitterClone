@@ -77,15 +77,17 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-
-    });
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+        });
 });
 
 var app = builder.Build();
@@ -102,6 +104,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseCors();
+app.UseCors("AllowFrontend");
+
 
 app.UseAuthentication();
 app.UseAuthorization();
