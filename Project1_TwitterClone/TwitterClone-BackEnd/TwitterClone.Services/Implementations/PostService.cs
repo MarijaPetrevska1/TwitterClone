@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TwitterClone.DataAccess.Implementations;
 using TwitterClone.DataAccess.Interfaces;
 using TwitterClone.Domain.Entities;
 using TwitterClone.DTOs.Posts;
@@ -71,4 +72,26 @@ public class PostService : IPostService
 
         _postRepo.Add(retweet);
     }
+
+    public void ToggleLike(int postId, int userId)
+    {
+        var post = _postRepo.GetById(postId);
+        if (post == null) throw new Exception("Post not found");
+
+        var existingLike = post.Likes.FirstOrDefault(l => l.UserId == userId);
+
+        if (existingLike != null)
+        {
+            // Remove like
+            post.Likes.Remove(existingLike);
+        }
+        else
+        {
+            // Add like
+            post.Likes.Add(new Like { UserId = userId, PostId = postId });
+        }
+
+        _postRepo.Update(post);
+    }
+
 }

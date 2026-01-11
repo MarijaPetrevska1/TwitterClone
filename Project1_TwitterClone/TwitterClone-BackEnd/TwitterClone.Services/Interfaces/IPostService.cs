@@ -8,5 +8,7 @@ namespace TwitterClone.Services.Interfaces
         List<PostDto> GetFeed();
         PostDto GetPostById(int id);
         void Retweet(int postId, int userId);
+
+        void ToggleLike(int postId, int userId);
     }
 }

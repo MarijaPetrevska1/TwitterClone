@@ -46,6 +46,24 @@ namespace TwitterClone.Web.Controllers
             return Ok(posts);
         }
 
+        [HttpPost("{postId}/like")]
+        public IActionResult ToggleLike(int postId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                int userId = userIdClaim != null ? int.Parse(userIdClaim) : 1;
+
+                _postService.ToggleLike(postId, userId);
+
+                return Ok(new { message = "Like toggled successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         // RETWEET
         [HttpPost("{postId}/retweet")]
         public IActionResult Retweet(int postId)

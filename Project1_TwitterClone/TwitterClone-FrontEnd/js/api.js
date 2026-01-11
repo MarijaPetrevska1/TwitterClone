@@ -1,3 +1,5 @@
+
+
 const API_BASE = "https://localhost:7211/api";
 
 // ---------- AUTH ----------
@@ -34,6 +36,7 @@ export async function getFeed() {
     const res = await fetch(`${API_BASE}/posts/feed`, {
         headers: authHeader()
     });
+    if (!res.ok) throw await res.text();
     return res.json();
 }
 
@@ -44,21 +47,27 @@ export async function createPost(content) {
             "Content-Type": "application/json",
             ...authHeader()
         },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({ content, retweetPostId: null })
     });
+
+    if (!res.ok) throw await res.text();
     return res.json();
 }
 
-export async function toggleLike(id) {
-    await fetch(`${API_BASE}/posts/${id}/like`, {
+export async function toggleLike(postId) {
+    const res = await fetch(`${API_BASE}/posts/${postId}/like`, {
         method: "POST",
         headers: authHeader()
     });
+    if (!res.ok) throw await res.text();
+    return res.json();
 }
 
-export async function retweetPost(id) {
-    await fetch(`${API_BASE}/posts/${id}/retweet`, {
+export async function retweetPost(postId) {
+    const res = await fetch(`${API_BASE}/posts/${postId}/retweet`, {
         method: "POST",
         headers: authHeader()
     });
+    if (!res.ok) throw await res.text();
+    return res.json();
 }
