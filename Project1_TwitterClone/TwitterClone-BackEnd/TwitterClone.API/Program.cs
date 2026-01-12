@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TwitterClone.DataAccess.Interfaces;
 using TwitterClone.Helpers;
 using TwitterClone.Services.Interfaces;
+//using TwitterClone.Services.Implementations;
+using Microsoft.Extensions.Options;
+using TwitterClone.DataAccess.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// ===== Add Controllers =====
 builder.Services.AddControllers();
 
-
+// ===== Swagger / OpenAPI =====
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -23,34 +25,30 @@ builder.Services.AddSwaggerGen(c =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey
     });
+
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
             },
             new string[] {}
         }
     });
 });
 
-
+// ===== AppSettings =====
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 var appSettings = appSettingsSection.Get<AppSettings>();
 
-
+// ===== Dependency Injection =====
 DependencyInjectionHelper.InjectDbContext(builder.Services, appSettings.ConnectionString);
 DependencyInjectionHelper.InjectRepositories(builder.Services);
 
-
+// Services
 builder.Services.AddTransient<IPostService, PostService>();
-builder.Services.AddTransient<ILikeService, LikeService>();
 builder.Services.AddTransient<IUserService, UserService>(sp =>
 {
     var userRepo = sp.GetRequiredService<IUserRepository>();
@@ -58,7 +56,7 @@ builder.Services.AddTransient<IUserService, UserService>(sp =>
     return new UserService(userRepo, settings);
 });
 
-
+// ===== JWT Authentication =====
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,7 +64,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false;
+    options.RequireHttpsMetadata = false; 
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -77,22 +75,21 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
+// ===== CORS =====
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyOrigin();
-        });
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
+// ===== Build App =====
 var app = builder.Build();
 
-
+// ===== Middleware =====
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -103,9 +100,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseCors();
-app.UseCors("AllowFrontend");
-
+app.UseCors("AllowFrontend"); 
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -113,4 +108,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

@@ -1,4 +1,3 @@
-
 import { getFeed, createPost, toggleLike, retweetPost } from './api.js';
 
 const feedUl = document.getElementById('feed');
@@ -6,18 +5,12 @@ const createBtn = document.getElementById('create-post-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const themeBtn = document.getElementById('theme-toggle');
 
-// ===== Dark / Light Theme =====
-if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark-theme');
-}
+// ===== Theme =====
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-theme');
 
 themeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark-theme');
-    if (document.body.classList.contains('dark-theme')) {
-        localStorage.setItem('theme', 'dark');
-    } else {
-        localStorage.setItem('theme', 'light');
-    }
+    localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
 });
 
 // ===== Logout =====
@@ -28,26 +21,30 @@ logoutBtn.addEventListener('click', () => {
 
 // ===== Create Post =====
 createBtn.addEventListener('click', async () => {
-    const content = document.getElementById('new-post-content').value;
+    const content = document.getElementById('new-post-content').value.trim();
     if (!content) return;
+
     try {
         await createPost(content);
         document.getElementById('new-post-content').value = "";
         loadFeed();
     } catch (err) {
-        alert("Failed to create post");
-        console.error(err);
+        console.error("Failed to create post:", err);
+        alert("Failed to create post. See console.");
     }
 });
 
 // ===== Load Feed =====
 export async function loadFeed() {
+    if (!localStorage.getItem("jwt")) return window.location.href = "login.html";
+
     feedUl.innerHTML = "";
     let posts = [];
+
     try {
         posts = await getFeed();
     } catch (err) {
-        console.error("Failed to load feed", err);
+        console.error("Failed to load feed:", err);
         return;
     }
 
@@ -55,37 +52,37 @@ export async function loadFeed() {
         const li = document.createElement('li');
         li.innerHTML = `
             <strong>${p.username}</strong>: ${p.content} <br>
-            Likes: ${p.likesCount} 
+            Likes: ${p.likesCount}
             <button class="like-btn" data-id="${p.id}">Like</button>
             <button class="retweet-btn" data-id="${p.id}">Retweet</button>
         `;
         feedUl.appendChild(li);
     });
 
-    // ===== Add Like Events =====
+    // Add like events
     document.querySelectorAll(".like-btn").forEach(btn => {
         btn.addEventListener("click", async () => {
             try {
                 await toggleLike(btn.dataset.id);
                 loadFeed();
             } catch (err) {
-                console.error("Failed to like", err);
+                console.error("Failed to toggle like:", err);
             }
         });
     });
 
-    // ===== Add Retweet Events =====
+    // Add retweet events
     document.querySelectorAll(".retweet-btn").forEach(btn => {
         btn.addEventListener("click", async () => {
             try {
                 await retweetPost(btn.dataset.id);
                 loadFeed();
             } catch (err) {
-                console.error("Failed to retweet", err);
+                console.error("Failed to retweet:", err);
             }
         });
     });
 }
 
-// ===== Auto-load feed on page load =====
+// ===== Auto-load feed =====
 loadFeed();

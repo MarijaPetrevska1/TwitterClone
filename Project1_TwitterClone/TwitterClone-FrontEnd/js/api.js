@@ -1,5 +1,3 @@
-
-
 const API_BASE = "https://localhost:7211/api";
 
 // ---------- AUTH ----------
@@ -10,8 +8,10 @@ export async function loginUser(user) {
         body: JSON.stringify(user)
     });
 
-    if (!res.ok) throw await res.text();
-    return res.json(); // { Token: "..." }
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json(); // { token: "..." }
+    localStorage.setItem("jwt", data.token); 
+    return data;
 }
 
 export async function registerUser(user) {
@@ -21,22 +21,23 @@ export async function registerUser(user) {
         body: JSON.stringify(user)
     });
 
-    if (!res.ok) throw await res.text();
+    if (!res.ok) throw new Error(await res.text());
     return res.text();
 }
 
 // ---------- POSTS ----------
 function authHeader() {
-    return {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`
-    };
+    const token = localStorage.getItem("jwt"); 
+    return token
+        ? { Authorization: `Bearer ${token}` }
+        : {};
 }
 
 export async function getFeed() {
     const res = await fetch(`${API_BASE}/posts/feed`, {
         headers: authHeader()
     });
-    if (!res.ok) throw await res.text();
+    if (!res.ok) throw new Error(await res.text());
     return res.json();
 }
 
@@ -47,10 +48,9 @@ export async function createPost(content) {
             "Content-Type": "application/json",
             ...authHeader()
         },
-        body: JSON.stringify({ content, retweetPostId: null })
+        body: JSON.stringify({ content })
     });
-
-    if (!res.ok) throw await res.text();
+    if (!res.ok) throw new Error(await res.text());
     return res.json();
 }
 
@@ -59,7 +59,7 @@ export async function toggleLike(postId) {
         method: "POST",
         headers: authHeader()
     });
-    if (!res.ok) throw await res.text();
+    if (!res.ok) throw new Error(await res.text());
     return res.json();
 }
 
@@ -68,6 +68,6 @@ export async function retweetPost(postId) {
         method: "POST",
         headers: authHeader()
     });
-    if (!res.ok) throw await res.text();
+    if (!res.ok) throw new Error(await res.text());
     return res.json();
 }

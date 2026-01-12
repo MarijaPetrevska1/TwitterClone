@@ -1,38 +1,38 @@
 import { loginUser, registerUser } from "./api.js";
 
-// LOGIN
+// ===== LOGIN =====
 document.getElementById("login-btn")?.addEventListener("click", async () => {
     try {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
-        const res = await loginUser({ username, password });
-        localStorage.setItem("jwt", res.Token);
+        if (!username || !password) return alert("Enter username and password");
 
-        window.location.href = "home.html";
+        await loginUser({ username, password });
+
+        window.location.href = "home.html"; // после login
     } catch (err) {
-        alert(err);
+        alert("Login failed: " + err.message);
+        console.error(err);
     }
 });
 
-// REGISTER
+// ===== REGISTER =====
 document.getElementById("register-btn")?.addEventListener("click", async () => {
     try {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const confirm = document.getElementById("confirm").value;
 
-        await registerUser({
-            username,
-            password,
-            confirmPassword: confirm,
-            firstName: "Test",
-            lastName: "User"
-        });
+        if (!username || !password || !confirm) return alert("Fill all fields");
+        if (password !== confirm) return alert("Passwords do not match");
+
+        await registerUser({ username, password, confirmPassword: confirm });
 
         alert("Registered successfully");
         window.location.href = "login.html";
     } catch (err) {
-        alert(err);
+        alert("Register failed: " + err.message);
+        console.error(err);
     }
 });
