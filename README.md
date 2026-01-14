@@ -5,6 +5,7 @@
 
 This project is a simplified Twitter clone built as part of the Product Engineering practical assignment.
 The goal of the assignment was to design and implement a functional product-like solution, focusing on architecture, clean code, separation of concerns, and interactive features.
+
 The application supports core social media functionalities such as authentication, posting content, interacting with posts, and viewing a feed, implemented with a clear separation between backend and frontend.
 
 ---
