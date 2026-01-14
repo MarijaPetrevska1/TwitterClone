@@ -4,6 +4,7 @@ using System.Linq;
 using TwitterClone.DataAccess.Implementations;
 using TwitterClone.DataAccess.Interfaces;
 using TwitterClone.Domain.Entities;
+using TwitterClone.DTOs.Comments;
 using TwitterClone.DTOs.Posts;
 using TwitterClone.Mappers;
 using TwitterClone.Services.Interfaces;
@@ -37,12 +38,20 @@ public class PostService : IPostService
         _postRepo.Add(post);
     }
 
-    public List<PostDto> GetFeed()
+    public List<PostDto> GetFeed(int? currentUserId = null)
     {
         var posts = _postRepo.GetAll();
-        return posts.Select(p => p.ToPostDto()).ToList();
+        return posts.Select(p => new PostDto
+        {
+            Id = p.Id,
+            Content = p.Content,
+            Username = p.User.Username,
+            LikesCount = p.Likes.Count,
+            RetweetId = p.RetweetPostId,
+            CreatedAt = p.CreatedAt,
+            UserLiked = currentUserId.HasValue && p.Likes.Any(l => l.UserId == currentUserId.Value)
+        }).ToList();
     }
-
     public PostDto GetPostById(int id)
     {
         var post = _postRepo.GetById(id);
@@ -93,5 +102,41 @@ public class PostService : IPostService
 
         _postRepo.Update(post);
     }
+
+    public List<CommentDto> GetComments(int postId)
+    {
+        var post = _postRepo.GetById(postId);
+        if (post == null) throw new Exception("Post not found");
+
+        return post.Comments
+                   .Select(c => new CommentDto
+                   {
+                       Id = c.Id,
+                       Content = c.Content,
+                       Username = c.User.Username,
+                       CreatedAt = c.CreatedAt
+                   })
+                   .ToList();
+    }
+
+    public void AddComment(int postId, int userId, string content)
+    {
+        var post = _postRepo.GetById(postId);
+        if (post == null) throw new Exception("Post not found");
+
+        var comment = new Comment
+        {
+            PostId = postId,
+            UserId = userId,
+            Content = content,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _postRepo.AddComment(comment);
+    }
+
+
+
+
 
 }

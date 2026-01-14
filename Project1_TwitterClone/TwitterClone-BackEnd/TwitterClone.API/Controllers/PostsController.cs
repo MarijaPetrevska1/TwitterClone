@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TwitterClone.DTOs.Comments;
 using TwitterClone.DTOs.Posts;
 using TwitterClone.Services.Interfaces;
 
@@ -38,11 +39,21 @@ namespace TwitterClone.Web.Controllers
         }
 
         // GET FEED
+        //[HttpGet("feed")]
+        //[AllowAnonymous] 
+        //public IActionResult GetFeed()
+        //{
+        //    var posts = _postService.GetFeed();
+        //    return Ok(posts);
+        //}
+
         [HttpGet("feed")]
-        [AllowAnonymous] 
         public IActionResult GetFeed()
         {
-            var posts = _postService.GetFeed();
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            int? userId = userIdClaim != null ? int.Parse(userIdClaim) : (int?)null;
+
+            var posts = _postService.GetFeed(userId);
             return Ok(posts);
         }
 
@@ -82,5 +93,43 @@ namespace TwitterClone.Web.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpPost("{postId}/comment")]
+        public IActionResult AddComment(int postId, [FromBody] AddCommentDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null) return Unauthorized();
+
+            int userId = int.Parse(userIdClaim);
+
+            _postService.AddComment(postId, userId, dto.Content);
+
+            return Ok(new
+            {
+                content = dto.Content,
+                username = User.Identity?.Name
+            });
+        }
+
+        [HttpGet("{postId}/comments")]
+        [AllowAnonymous]
+        public IActionResult GetComments(int postId)
+        {
+            try
+            {
+                var comments = _postService.GetComments(postId);
+                return Ok(comments);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
+
     }
 }

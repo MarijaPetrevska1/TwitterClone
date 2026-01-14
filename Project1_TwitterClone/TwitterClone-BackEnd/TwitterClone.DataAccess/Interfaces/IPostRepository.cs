@@ -14,5 +14,7 @@ namespace TwitterClone.DataAccess.Interfaces
         List<Post> GetByUserId(int userId);
         void Add(Post post);
         void Update(Post post);
+        void AddComment(Comment comment);
+        List<Comment> GetCommentsByPostId(int postId);
     }
 }

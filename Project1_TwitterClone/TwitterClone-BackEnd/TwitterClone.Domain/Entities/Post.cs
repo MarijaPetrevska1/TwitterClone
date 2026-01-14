@@ -19,6 +19,9 @@ namespace TwitterClone.Domain.Entities
         public Post RetweetPost { get; set; }
 
         public ICollection<Like> Likes { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+
     }
 
 }

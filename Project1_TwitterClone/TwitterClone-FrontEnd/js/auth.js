@@ -10,7 +10,7 @@ document.getElementById("login-btn")?.addEventListener("click", async () => {
 
         await loginUser({ username, password });
 
-        window.location.href = "home.html"; // после login
+        window.location.href = "home.html"; 
     } catch (err) {
         alert("Login failed: " + err.message);
         console.error(err);

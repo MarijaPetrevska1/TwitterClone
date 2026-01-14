@@ -14,5 +14,7 @@ namespace TwitterClone.DTOs.Posts
         public int LikesCount { get; set; }   
         public int? RetweetId { get; set; }   
         public DateTime CreatedAt { get; set; }
+        public bool UserLiked { get; set; }
+
     }
 }

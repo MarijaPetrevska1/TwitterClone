@@ -16,6 +16,7 @@ namespace TwitterClone.Mappers
                 LikesCount = post.Likes?.Count ?? 0,
                 RetweetId = post.RetweetPostId,
                 CreatedAt = post.CreatedAt
+
             };
         }
     }

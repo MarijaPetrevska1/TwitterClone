@@ -55,5 +55,27 @@ namespace TwitterClone.DataAccess.Implementations
             _context.Posts.Update(post);
             _context.SaveChanges();
         }
+        public void AddComment(Comment comment)
+        {
+            try
+            {
+                _context.Comments.Add(comment);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var inner = ex.InnerException?.Message;
+                throw new Exception(inner);
+            }
+        }
+
+        public List<Comment> GetCommentsByPostId(int postId)
+        {
+            return _context.Comments
+                .Where(c => c.PostId == postId)
+                .Include(c => c.User)
+                .OrderBy(c => c.CreatedAt)
+                .ToList();
+        }
     }
 }
