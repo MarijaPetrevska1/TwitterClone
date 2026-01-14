@@ -4,7 +4,7 @@
 📌 Overview
 
 This project is a simplified Twitter clone built as part of the Product Engineering practical assignment.
-The goal of the assignment was to design and implement a functional product-like solution, focusing on architecture, logic, code structure, and problem-solving, rather than just visual polish.
+The goal of the assignment was to design and implement a functional product-like solution, focusing on architecture, clean code, separation of concerns, and interactive features.
 The application supports core social media functionalities such as authentication, posting content, interacting with posts, and viewing a feed, implemented with a clear separation between backend and frontend.
 
 ---
@@ -12,7 +12,7 @@ The application supports core social media functionalities such as authenticatio
 ## 🏗 Architecture Overview
 
 ### 🔹 Backend (ASP.NET Core Web API)
-- RESTful API handling authentication, posts, likes, retweets, and profiles
+- RESTful API handling authentication, posts, likes, retweets, comments and profiles
 - Stateless JWT authentication
 - Services & repositories to maintain clean separation of concerns
 - Data persistence with Entity Framework Core and MSSQL
@@ -23,6 +23,7 @@ The application supports core social media functionalities such as authenticatio
 - Communicates with backend via HTTP API (`fetch`)
 - JWT stored in `localStorage` for authentication
 - SPA-like navigation using page redirects
+- Modern UI with dark/light theme, responsive layout, and modular JS code
 
 ---
 
@@ -63,13 +64,18 @@ http://127.0.0.1:5500/login.html
 **Core Features (Mandatory)**
 - User registration & login
 - Create posts (tweets)
-- Feed displaying posts
-- Like & retweet functionality
+- Feed displaying posts 
+- Like, retweet, and comment on posts
 - User profile page
+- Responsive design (works on mobile & desktop)
+- Dark/light theme toggle
 
 **Additional Features (Bonus)**
 - Display own and other users’ posts
+- Comments section for posts
+- Prevent duplicate likes
 - Protected routes using client-side guards
+- Improved UI/UX inspired by Twitter
 - Modular JS code for maintainability
 
 ---
