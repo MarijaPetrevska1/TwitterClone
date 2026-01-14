@@ -7,6 +7,7 @@ namespace TwitterClone.Web.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
+
     public class LikesController : ControllerBase
     {
         private readonly ILikeService _likeService;
